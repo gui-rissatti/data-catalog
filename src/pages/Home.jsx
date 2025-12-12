@@ -5,15 +5,18 @@ import DatasetCard from '../components/DatasetCard';
 
 export default function Home() {
     const [searchTerm, setSearchTerm] = useState('');
-    const [selectedCategory, setSelectedCategory] = useState('All');
-
-    const categories = ['All', ...new Set(catalog.map(d => d.category))];
+    // Note: we will need to update the catalog metadata to translated categories too
+    // For now, let's keep logic simple
+    const categories = ['Todos', ...new Set(catalog.map(d => d.category))];
+    const [selectedCategory, setSelectedCategory] = useState('Todos');
 
     const filteredData = catalog.filter(item => {
         const matchesSearch = item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
             item.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
             item.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
-        const matchesCategory = selectedCategory === 'All' || item.category === selectedCategory;
+
+        // Logic for "Todos" implies matching everything, else match category
+        const matchesCategory = selectedCategory === 'Todos' || item.category === selectedCategory;
         return matchesSearch && matchesCategory;
     });
 
@@ -27,17 +30,17 @@ export default function Home() {
 
                 <div className="relative z-10 max-w-2xl">
                     <h1 className="text-4xl font-extrabold mb-4 tracking-tight">
-                        Discover Corporate Intelligence
+                        Catálogo de Dados Corporativo
                     </h1>
                     <p className="text-blue-100 text-lg mb-8 leading-relaxed">
-                        The central hub for all company data assets. Search, explore, and integrate trusted data into your workflows.
+                        O hub central para todos os ativos de dados da empresa. Pesquise, explore e integre dados confiáveis em seus fluxos de trabalho.
                     </p>
 
                     <div className="relative">
                         <Search className="absolute left-4 top-3.5 h-6 w-6 text-slate-400" />
                         <input
                             type="text"
-                            placeholder="Search for datasets, metrics, or tags..."
+                            placeholder="Pesquise por datasets, métricas ou tags..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                             className="w-full pl-12 pr-4 py-3.5 rounded-xl text-slate-900 focus:outline-none focus:ring-4 focus:ring-blue-500/30 shadow-lg"
@@ -52,7 +55,7 @@ export default function Home() {
                 <div className="w-full md:w-64 flex-shrink-0">
                     <div className="sticky top-24">
                         <h2 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
-                            <Filter className="h-4 w-4" /> Filters
+                            <Filter className="h-4 w-4" /> Filtros
                         </h2>
                         <div className="space-y-2">
                             {categories.map(cat => (
@@ -75,7 +78,7 @@ export default function Home() {
                 <div className="flex-1">
                     <div className="flex justify-between items-center mb-6">
                         <h2 className="text-xl font-bold text-slate-900">
-                            {filteredData.length} Dataset{filteredData.length !== 1 && 's'} Found
+                            {filteredData.length} Dataset{filteredData.length !== 1 && 's'} Encontrado{filteredData.length !== 1 && 's'}
                         </h2>
                     </div>
 
@@ -87,7 +90,7 @@ export default function Home() {
 
                     {filteredData.length === 0 && (
                         <div className="text-center py-20 bg-white rounded-xl border border-dashed border-slate-300">
-                            <p className="text-slate-500">No datasets found matching your criteria.</p>
+                            <p className="text-slate-500">Nenhum dataset encontrado com esses critérios.</p>
                         </div>
                     )}
                 </div>

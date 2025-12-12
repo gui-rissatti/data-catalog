@@ -3,9 +3,9 @@ import { ArrowRight, Database, CheckCircle, ShieldCheck, Trophy, Layers } from '
 
 export default function DataLineage({ currentLayer, title }) {
     const layers = [
-        { name: 'Bronze', icon: Database, color: 'text-orange-600', bg: 'bg-orange-100', desc: 'Raw Ingestion' },
-        { name: 'Silver', icon: ShieldCheck, color: 'text-slate-600', bg: 'bg-slate-200', desc: 'Cleaned & Enriched' },
-        { name: 'Gold', icon: Trophy, color: 'text-yellow-600', bg: 'bg-yellow-100', desc: 'Aggregated & Ready' }
+        { name: 'Bronze', icon: Database, color: 'text-orange-600', bg: 'bg-orange-100', desc: 'Ingestão Bruta' },
+        { name: 'Silver', icon: ShieldCheck, color: 'text-slate-600', bg: 'bg-slate-200', desc: 'Limpo & Enriquecido' },
+        { name: 'Gold', icon: Trophy, color: 'text-yellow-600', bg: 'bg-yellow-100', desc: 'Agregado & Pronto' }
     ];
 
     // Determine active index based on current layer
@@ -15,7 +15,7 @@ export default function DataLineage({ currentLayer, title }) {
     return (
         <div className="bg-white p-6 rounded-xl border border-slate-200">
             <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2 mb-6">
-                <Layers className="h-4 w-4 text-slate-500" /> Data Lineage
+                <Layers className="h-4 w-4 text-slate-500" /> Linhagem de Dados
             </h3>
 
             <div className="relative pl-4 border-l-2 border-slate-100 space-y-8">
@@ -35,8 +35,8 @@ export default function DataLineage({ currentLayer, title }) {
 
                             <div>
                                 <h4 className={`text-sm font-bold ${isActive ? 'text-slate-900' : 'text-slate-500'}`}>
-                                    {layer.name} Layer
-                                    {isActive && <span className="ml-2 text-[10px] bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded-full uppercase tracking-wide">Current</span>}
+                                    Camada {layer.name}
+                                    {isActive && <span className="ml-2 text-[10px] bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded-full uppercase tracking-wide">Atual</span>}
                                 </h4>
                                 <p className="text-xs text-slate-500">{layer.desc}</p>
                             </div>
@@ -46,7 +46,7 @@ export default function DataLineage({ currentLayer, title }) {
             </div>
 
             <div className="mt-6 pt-4 border-t border-slate-50 text-xs text-center text-slate-400">
-                This dataset is in the <strong>{currentLayer || 'Bronze'}</strong> layer of the Medallion Architecture.
+                Este dataset está na camada <strong>{currentLayer || 'Bronze'}</strong> da Arquitetura Medalhão.
             </div>
         </div>
     );

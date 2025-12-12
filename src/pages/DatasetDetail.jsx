@@ -13,8 +13,8 @@ export default function DatasetDetail() {
     if (!dataset) {
         return (
             <div className="text-center py-20">
-                <h2 className="text-2xl font-bold text-slate-900">Dataset not found</h2>
-                <Link to="/" className="text-blue-600 hover:underline mt-4 inline-block">Return Home</Link>
+                <h2 className="text-2xl font-bold text-slate-900">Dataset não encontrado</h2>
+                <Link to="/" className="text-blue-600 hover:underline mt-4 inline-block">Voltar ao Início</Link>
             </div>
         );
     }
@@ -37,7 +37,7 @@ export default function DatasetDetail() {
     return (
         <div>
             <Link to="/" className="inline-flex items-center text-sm text-slate-500 hover:text-blue-600 mb-6 transition-colors">
-                <ArrowLeft className="h-4 w-4 mr-1" /> Back to Catalog
+                <ArrowLeft className="h-4 w-4 mr-1" /> Voltar ao Catálogo
             </Link>
 
             {/* Header */}
@@ -46,7 +46,7 @@ export default function DatasetDetail() {
                     <div className="flex-1">
                         <div className="flex flex-wrap items-center gap-3 mb-3">
                             <span className={`text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide border ${getLayerColor(dataset.layer)}`}>
-                                {dataset.layer || 'Unclassified'} Layer
+                                Camada {dataset.layer || 'Unclassified'}
                             </span>
                             <span className="bg-blue-50 text-blue-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide border border-blue-100">
                                 {dataset.platform || 'Databricks'}
@@ -58,7 +58,7 @@ export default function DatasetDetail() {
                         </p>
                     </div>
                     <div className="flex flex-col gap-3 min-w-[240px] bg-slate-50 p-4 rounded-xl border border-slate-100">
-                        <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Catalog Path</h3>
+                        <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Caminho no Catálogo</h3>
                         <div className="flex items-center gap-2 text-sm font-mono text-slate-700 bg-white px-3 py-2 rounded border border-slate-200 break-all select-all">
                             {dataset.catalog_path}
                         </div>
@@ -67,7 +67,7 @@ export default function DatasetDetail() {
                             className="text-xs text-blue-600 hover:text-blue-700 font-medium flex items-center justify-end gap-1"
                         >
                             {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
-                            {copied ? 'Copied' : 'Copy Path'}
+                            {copied ? 'Copiado' : 'Copiar Caminho'}
                         </button>
                     </div>
                 </div>
@@ -78,7 +78,7 @@ export default function DatasetDetail() {
                             {dataset.owner.charAt(0)}
                         </div>
                         <div>
-                            <span className="block text-xs text-slate-400">Data Owner</span>
+                            <span className="block text-xs text-slate-400">Proprietário</span>
                             <span className="font-semibold text-slate-900">{dataset.owner}</span>
                         </div>
                     </div>
@@ -102,11 +102,11 @@ export default function DatasetDetail() {
                     <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
                         <div className="bg-slate-50 px-6 py-4 border-b border-slate-200 flex items-center gap-2">
                             <Terminal className="h-5 w-5 text-slate-500" />
-                            <h3 className="font-semibold text-slate-900">Access & Usage</h3>
+                            <h3 className="font-semibold text-slate-900">Acesso & Uso</h3>
                         </div>
                         <div className="p-6">
                             <div className="mb-6">
-                                <h4 className="text-sm font-bold text-slate-700 mb-2">Sample Query</h4>
+                                <h4 className="text-sm font-bold text-slate-700 mb-2">Exemplo de Query</h4>
                                 <div className="bg-slate-900 rounded-lg p-4 relative group">
                                     <pre className="text-blue-300 font-mono text-sm overflow-x-auto whitespace-pre-wrap">
                                         <code>{dataset.sample_query || 'SELECT * FROM ' + dataset.catalog_path}</code>
@@ -114,7 +114,7 @@ export default function DatasetDetail() {
                                     <button
                                         onClick={() => copyToClipboard(dataset.sample_query)}
                                         className="absolute top-3 right-3 p-2 bg-white/10 hover:bg-white/20 rounded text-white opacity-0 group-hover:opacity-100 transition-opacity"
-                                        title="Copy Query"
+                                        title="Copiar Query"
                                     >
                                         {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
                                     </button>
@@ -122,7 +122,7 @@ export default function DatasetDetail() {
                             </div>
 
                             <div>
-                                <h4 className="text-sm font-bold text-slate-700 mb-2">Physical Location</h4>
+                                <h4 className="text-sm font-bold text-slate-700 mb-2">Localização Física</h4>
                                 <code className="text-sm bg-slate-100 px-3 py-1 rounded text-slate-600 block w-full">
                                     {dataset.location}
                                 </code>
@@ -137,16 +137,6 @@ export default function DatasetDetail() {
                 {/* Right Col: Lineage & Context */}
                 <div className="space-y-6">
                     <DataLineage currentLayer={dataset.layer} title={dataset.title} />
-
-                    <div className="bg-blue-50 border border-blue-100 rounded-xl p-5">
-                        <h3 className="font-bold text-blue-900 mb-2 text-sm">Need Access?</h3>
-                        <p className="text-sm text-blue-800 mb-4 leading-relaxed">
-                            You currently have <strong>Read</strong> access via the <code>data-science</code> group. To request write access or report an issue, please contact the Data Governance team.
-                        </p>
-                        <button className="w-full bg-white text-blue-600 font-semibold py-2 px-4 rounded-lg border border-blue-200 hover:bg-blue-50 transition-colors text-sm">
-                            Request Elevated Access
-                        </button>
-                    </div>
                 </div>
             </div>
         </div>

@@ -26,9 +26,9 @@ export default function DatasetCard({ dataset }) {
             </p>
 
             <div className="flex items-center justify-between mt-auto pt-4 border-t border-slate-50">
-                <span className="text-xs text-slate-400">Owner: {dataset.owner}</span>
+                <span className="text-xs text-slate-400">Proprietário: {dataset.owner}</span>
                 <div className="flex items-center text-blue-600 text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity">
-                    View Data <ArrowRight className="ml-1 h-4 w-4" />
+                    Ver Dados <ArrowRight className="ml-1 h-4 w-4" />
                 </div>
             </div>
         </Link>

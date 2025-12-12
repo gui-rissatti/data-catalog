@@ -10,7 +10,7 @@ export default function Layout({ children }) {
             </main>
             <footer className="border-t border-slate-200 bg-white py-8 mt-auto">
                 <div className="max-w-7xl mx-auto px-4 text-center text-slate-500 text-sm">
-                    <p>© 2023 Corporate Data Catalog. Internal Use Only.</p>
+                    <p>© 2023 Catálogo de Dados Corporativo. Uso Interno.</p>
                 </div>
             </footer>
         </div>
