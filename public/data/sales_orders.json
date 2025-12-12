@@ -1,0 +1,42 @@
+[
+    {
+        "order_id": "ORD-001",
+        "customer": "Acme Corp",
+        "product": "Premium Widgets",
+        "amount": 5000,
+        "status": "Completed",
+        "date": "2023-10-15"
+    },
+    {
+        "order_id": "ORD-002",
+        "customer": "Globex",
+        "product": "Basic Gadgets",
+        "amount": 1200,
+        "status": "Shipped",
+        "date": "2023-10-16"
+    },
+    {
+        "order_id": "ORD-003",
+        "customer": "Soylent Corp",
+        "product": "Premium Widgets",
+        "amount": 5000,
+        "status": "Processing",
+        "date": "2023-10-17"
+    },
+    {
+        "order_id": "ORD-004",
+        "customer": "Initech",
+        "product": "Service Plan",
+        "amount": 300,
+        "status": "Completed",
+        "date": "2023-10-18"
+    },
+    {
+        "order_id": "ORD-005",
+        "customer": "Umbrella Corp",
+        "product": "Bio-Hazard Kit",
+        "amount": 9500,
+        "status": "Cancelled",
+        "date": "2023-10-19"
+    }
+]

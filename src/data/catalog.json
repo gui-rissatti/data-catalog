@@ -1,0 +1,179 @@
+[
+    {
+        "id": "finance-001",
+        "title": "Monthly Global Revenue",
+        "description": "Consolidated revenue, expenses, and profit by region and month. Source of truth for executive reporting. Sourced from SAP and Salesforce.",
+        "category": "Finance",
+        "owner": "Sarah Jones (Finance Ops)",
+        "layer": "Gold",
+        "platform": "Databricks",
+        "catalog_path": "prod_catalog.finance.revenue_monthly_agg",
+        "location": "s3://corporate-datalake/gold/finance/revenue_agg",
+        "tags": [
+            "revenue",
+            "profit",
+            "executive",
+            "monthly",
+            "kpi"
+        ],
+        "schema": [
+            {
+                "name": "region",
+                "type": "string",
+                "description": "Geographic region (NA, EU, APAC)"
+            },
+            {
+                "name": "month",
+                "type": "date",
+                "description": "Reporting month (YYYY-MM)"
+            },
+            {
+                "name": "revenue",
+                "type": "decimal(18,2)",
+                "description": "Total revenue in USD"
+            },
+            {
+                "name": "expenses",
+                "type": "decimal(18,2)",
+                "description": "Total operating expenses in USD"
+            },
+            {
+                "name": "profit",
+                "type": "decimal(18,2)",
+                "description": "Net profit (Revenue - Expenses)"
+            }
+        ],
+        "sample_query": "SELECT region, month, SUM(revenue) as total_rev \nFROM prod_catalog.finance.revenue_monthly_agg \nWHERE month >= '2023-01-01' \nGROUP BY region, month \nORDER BY month DESC;"
+    },
+    {
+        "id": "sales-001",
+        "title": "Raw Sales Orders",
+        "description": "Ingested stream of raw sales orders from the commerce platform. Contains PII and uncleaned status codes. Use with caution.",
+        "category": "Sales",
+        "owner": "Mike Ross (Sales Engineering)",
+        "layer": "Bronze",
+        "platform": "Databricks",
+        "catalog_path": "prod_catalog.sales.orders_raw",
+        "location": "s3://corporate-datalake/bronze/sales/orders_stream",
+        "tags": [
+            "orders",
+            "sales",
+            "raw",
+            "ingestion",
+            "pii-sensitive"
+        ],
+        "schema": [
+            {
+                "name": "order_json",
+                "type": "string",
+                "description": "Raw JSON blob of the order event"
+            },
+            {
+                "name": "ingested_at",
+                "type": "timestamp",
+                "description": "UTC timestamp of ingestion"
+            },
+            {
+                "name": "source_system",
+                "type": "string",
+                "description": "Originating system ID"
+            }
+        ],
+        "sample_query": "SELECT * FROM prod_catalog.sales.orders_raw \nWHERE ingested_at > current_date() - 1 \nLIMIT 100;"
+    },
+    {
+        "id": "media-001",
+        "title": "Enriched Campaign Performance",
+        "description": "Cleaned and standardized campaign metrics from Google, Facebook, and LinkedIn. Currency converted to USD and dates normalized.",
+        "category": "Media",
+        "owner": "Marketing CoE",
+        "layer": "Silver",
+        "platform": "Databricks",
+        "catalog_path": "prod_catalog.marketing.campaigns_enriched",
+        "location": "s3://corporate-datalake/silver/marketing/campaigns",
+        "tags": [
+            "marketing",
+            "ads",
+            "performance",
+            "silver-layer"
+        ],
+        "schema": [
+            {
+                "name": "campaign_id",
+                "type": "string",
+                "description": "Unique campaign identifier"
+            },
+            {
+                "name": "platform",
+                "type": "string",
+                "description": "Ad platform (Google, FB, LinkedIn)"
+            },
+            {
+                "name": "date",
+                "type": "date",
+                "description": "Performance date"
+            },
+            {
+                "name": "spend_usd",
+                "type": "decimal(10,2)",
+                "description": "Daily spend in USD"
+            },
+            {
+                "name": "impressions",
+                "type": "long",
+                "description": "Count of visual impressions"
+            },
+            {
+                "name": "clicks",
+                "type": "long",
+                "description": "Count of clicks"
+            }
+        ],
+        "sample_query": "SELECT platform, sum(spend_usd) as total_spend, sum(clicks) as total_clicks \nFROM prod_catalog.marketing.campaigns_enriched \nWHERE date BETWEEN '2023-10-01' AND '2023-12-31' \nGROUP BY platform;"
+    },
+    {
+        "id": "hr-001",
+        "title": "Employee Headcount Snapshot",
+        "description": "Monthly snapshot of active employees by department. Excludes sensitive compensation data.",
+        "category": "HR",
+        "owner": "People Analytics",
+        "layer": "Gold",
+        "platform": "Looker",
+        "catalog_path": "HR_Analytics.Headcount_Monthly",
+        "location": "N/A (View Only)",
+        "tags": [
+            "hr",
+            "headcount",
+            "gold-layer",
+            "reporting"
+        ],
+        "schema": [
+            {
+                "name": "snapshot_month",
+                "type": "date",
+                "description": "Month of snapshot"
+            },
+            {
+                "name": "department",
+                "type": "string",
+                "description": "Department code"
+            },
+            {
+                "name": "headcount",
+                "type": "integer",
+                "description": "Active employee count"
+            },
+            {
+                "name": "hires",
+                "type": "integer",
+                "description": "New hires in month"
+            },
+            {
+                "name": "terminations",
+                "type": "integer",
+                "description": "Departures in month"
+            }
+        ],
+        "sample_query": "-- Accessed via Looker Explore: HR > Headcount \n-- Filter: Department = 'Engineering'"
+    }
+]

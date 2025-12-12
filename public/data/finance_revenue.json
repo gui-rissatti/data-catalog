@@ -1,0 +1,42 @@
+[
+    {
+        "id": 1,
+        "region": "North America",
+        "month": "2023-01",
+        "revenue": 1200000,
+        "expenses": 850000,
+        "profit": 350000
+    },
+    {
+        "id": 2,
+        "region": "North America",
+        "month": "2023-02",
+        "revenue": 1150000,
+        "expenses": 820000,
+        "profit": 330000
+    },
+    {
+        "id": 3,
+        "region": "Europe",
+        "month": "2023-01",
+        "revenue": 950000,
+        "expenses": 700000,
+        "profit": 250000
+    },
+    {
+        "id": 4,
+        "region": "Europe",
+        "month": "2023-02",
+        "revenue": 980000,
+        "expenses": 710000,
+        "profit": 270000
+    },
+    {
+        "id": 5,
+        "region": "Asia Pacific",
+        "month": "2023-01",
+        "revenue": 800000,
+        "expenses": 600000,
+        "profit": 200000
+    }
+]
