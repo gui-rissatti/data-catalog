@@ -6,7 +6,7 @@ import DatasetDetail from './pages/DatasetDetail';
 
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/data-catalog">
       <Layout>
         <Routes>
           <Route path="/" element={<Home />} />
