@@ -5,6 +5,11 @@ import catalog from '../data/catalog.json';
 import SchemaTable from '../components/SchemaTable';
 import DataLineage from '../components/DataLineage';
 
+const KNOWN_KEYS = [
+    'id', 'title', 'description', 'schema', 'layer', 'platform',
+    'catalog_path', 'location', 'owner', 'tags', 'sample_query'
+];
+
 export default function DatasetDetail() {
     const { id } = useParams();
     const dataset = catalog.find(d => d.id === id);
@@ -24,6 +29,8 @@ export default function DatasetDetail() {
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
     };
+
+    const additionalMetadata = dataset ? Object.entries(dataset).filter(([key]) => !KNOWN_KEYS.includes(key)) : [];
 
     const getLayerColor = (layer) => {
         switch (layer?.toLowerCase()) {
@@ -139,6 +146,34 @@ export default function DatasetDetail() {
                     <DataLineage currentLayer={dataset.layer} title={dataset.title} />
                 </div>
             </div>
+
+            {/* Additional Metadata Section - Dynamic Rendering for Unity Catalog */}
+            {additionalMetadata.length > 0 && (
+                <div className="mt-8 bg-white rounded-xl border border-slate-200 overflow-hidden">
+                    <div className="bg-slate-50 px-6 py-4 border-b border-slate-200 flex items-center gap-2">
+                        <Database className="h-5 w-5 text-slate-500" />
+                        <h3 className="font-semibold text-slate-900">Metadados Adicionais</h3>
+                    </div>
+                    <div className="divide-y divide-slate-100">
+                        {additionalMetadata.map(([key, value]) => (
+                            <div key={key} className="px-6 py-4 flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-4 hover:bg-slate-50/50 transition-colors">
+                                <span className="text-sm font-bold text-slate-500 sm:w-1/4 uppercase tracking-wider pt-1">
+                                    {key.replace(/_/g, ' ')}
+                                </span>
+                                <div className="text-sm text-slate-900 font-mono break-all flex-1 bg-slate-50 rounded p-2 border border-slate-100">
+                                    {typeof value === 'object' ? (
+                                        <pre className="whitespace-pre-wrap font-mono text-xs text-slate-600">
+                                            {JSON.stringify(value, null, 2)}
+                                        </pre>
+                                    ) : (
+                                        String(value)
+                                    )}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
