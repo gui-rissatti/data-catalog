@@ -14,19 +14,25 @@ Este catálogo foi desenhado para ser um espelho fiel do Databricks Unity Catalo
 A fonte primária é o `system.information_schema` do Databricks.
 Execute uma query similar a esta para extrair os metadados basais:
 
-```sql
 SELECT
-  table_name as title,
-  comment as description,
-  table_owner as owner,
+  t.table_name as title,
+  t.comment as description,
+  t.table_owner as owner,
   'Databricks' as platform,
-  concat(table_catalog, '.', table_schema, '.', table_name) as catalog_path,
-  storage_location as location,
-  -- Adicione campos customizados aqui
-  properties:business_unit as business_unit,
-  properties:compliance_tag as compliance_tag
-FROM system.information_schema.tables
-WHERE table_catalog = 'prod_catalog'
+  concat(t.table_catalog, '.', t.table_schema, '.', t.table_name) as catalog_path,
+  t.storage_location as location,
+  t.table_type,
+  t.data_source_format,
+  c.column_name,
+  c.data_type as column_type,
+  c.comment as column_description,
+  c.ordinal_position
+FROM system.information_schema.tables t
+LEFT JOIN system.information_schema.columns c 
+  ON t.table_catalog = c.table_catalog 
+  AND t.table_schema = c.table_schema 
+  AND t.table_name = c.table_name
+WHERE t.table_catalog = 'prod_catalog'
 ```
 
 ### 2. Formato do JSON (`src/data/catalog.json`)

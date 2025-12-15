@@ -52,51 +52,66 @@ function parseCSV(csvText) {
 }
 
 function transformToCatalogSchema(rawRows) {
-    return rawRows.map(row => {
-        // Map fields
+    // Group rows by catalog_path (id)
+    const tables = {};
+
+    rawRows.forEach(row => {
+        // Fallback or explicit fields
         const catalog = row.table_catalog || 'default';
         const schema = row.table_schema || 'default';
         const table = row.table_name || 'unnamed';
-        const fullPath = `${catalog}.${schema}.${table}`;
+        // Use the explicit calculated 'catalog_path' if derived in SQL, else construct it
+        const fullPath = row.catalog_path || `${catalog}.${schema}.${table}`;
 
-        // Determine Layer from Schema (common convention)
-        let layer = 'Silver'; // Default
-        if (schema.toLowerCase().includes('bronze')) layer = 'Bronze';
-        else if (schema.toLowerCase().includes('gold')) layer = 'Gold';
-        else if (schema.toLowerCase().includes('silver')) layer = 'Silver';
-        else if (schema.toLowerCase().includes('diamond')) layer = 'Diamond'; // Seen in CSV
-        else if (schema.toLowerCase().includes('sandbox')) layer = 'Sandbox';
+        if (!tables[fullPath]) {
+            // First time seeing this table, initialize it
+            let layer = 'Silver'; // Default
+            const schemaToCheck = schema.toLowerCase();
+            if (schemaToCheck.includes('bronze')) layer = 'Bronze';
+            else if (schemaToCheck.includes('gold')) layer = 'Gold';
+            else if (schemaToCheck.includes('silver')) layer = 'Silver';
+            else if (schemaToCheck.includes('diamond')) layer = 'Diamond';
+            else if (schemaToCheck.includes('sandbox')) layer = 'Sandbox';
 
-        // Tags
-        const tags = [
-            layer.toLowerCase(),
-            row.data_source_format?.toLowerCase(),
-            row.table_type?.toLowerCase()
-        ].filter(Boolean);
+            const tags = [
+                layer.toLowerCase(),
+                row.data_source_format?.toLowerCase(),
+                row.table_type?.toLowerCase()
+            ].filter(Boolean);
 
-        if (row.is_insertable_into === 'YES') tags.push('writable');
+            if (row.is_insertable_into === 'YES') tags.push('writable');
 
-        return {
-            id: fullPath,
-            title: table.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '),
-            description: row.comment || 'Sem descrição disponível.',
-            category: schema.charAt(0).toUpperCase() + schema.slice(1),
-            owner: row.table_owner || 'Desconhecido',
-            layer: layer,
-            platform: 'Databricks',
-            catalog_path: fullPath,
-            location: row.storage_path || 'Managed',
-            // Dynamic extra fields found in CSV
-            table_type: row.table_type,
-            data_source_format: row.data_source_format,
-            created_at: row.created,
-            last_altered: row.last_altered,
-            // Standard Schema fields
-            tags: tags,
-            schema: [], // CSV does not contain column info
-            sample_query: `SELECT * FROM ${fullPath} LIMIT 10;`
-        };
+            tables[fullPath] = {
+                id: fullPath,
+                title: (row.title || table).split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '),
+                description: row.description || row.comment || 'Sem descrição disponível.',
+                category: layer,
+                owner: row.owner || row.table_owner || 'Desconhecido',
+                layer: layer,
+                platform: 'Databricks',
+                catalog_path: fullPath,
+                location: row.location || row.storage_path || 'Managed',
+                table_type: row.table_type,
+                data_source_format: row.data_source_format,
+                created_at: row.created,
+                last_altered: row.last_altered,
+                tags: tags,
+                schema: [],
+                sample_query: `SELECT * FROM ${fullPath} LIMIT 10;`
+            };
+        }
+
+        // Add column if present
+        if (row.column_name) {
+            tables[fullPath].schema.push({
+                name: row.column_name,
+                type: row.column_type || 'STRING',
+                description: row.column_description || ''
+            });
+        }
     });
+
+    return Object.values(tables);
 }
 
 try {
