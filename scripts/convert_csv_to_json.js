@@ -114,20 +114,34 @@ function transformToCatalogSchema(rawRows) {
     return Object.values(tables);
 }
 
+const RAW_DATA_DIR = path.join(__dirname, '../src/data/raw_data');
+const OUTPUT_PATH = path.join(__dirname, '../src/data/catalog.json');
+
 try {
-    console.log(`Reading CSV from ${CSV_PATH}...`);
-    const csvContent = fs.readFileSync(CSV_PATH, 'utf-8');
+    // 1. Find the CSV file
+    const files = fs.readdirSync(RAW_DATA_DIR);
+    const csvFile = files.find(file => file.endsWith('.csv'));
 
-    console.log('Parsing CSV...');
-    const rawData = parseCSV(csvContent);
+    if (!csvFile) {
+        throw new Error(`No CSV file found in ${RAW_DATA_DIR}`);
+    }
 
-    console.log(`Found ${rawData.length} rows. Transforming...`);
-    const catalogData = transformToCatalogSchema(rawData);
+    const csvPath = path.join(RAW_DATA_DIR, csvFile);
+    console.log(`Processing file: ${csvFile}`);
 
-    console.log(`Writing JSON to ${JSON_PATH}...`);
-    fs.writeFileSync(JSON_PATH, JSON.stringify(catalogData, null, 4), 'utf-8');
+    // 2. Read and Parse
+    const csvContent = fs.readFileSync(csvPath, 'utf-8');
+    const rawRows = parseCSV(csvContent);
+    console.log(`Parsed ${rawRows.length} rows from CSV.`);
 
-    console.log('Success! Catalog updated.');
+    // 3. Transform
+    const catalog = transformToCatalogSchema(rawRows);
+    console.log(`Transformed into ${catalog.length} unique datasets/tables.`);
+
+    // 4. Save
+    fs.writeFileSync(OUTPUT_PATH, JSON.stringify(catalog, null, 2));
+    console.log(`Successfully saved catalog to ${OUTPUT_PATH}`);
+
 } catch (error) {
     console.error('Error converting CSV:', error);
     process.exit(1);
