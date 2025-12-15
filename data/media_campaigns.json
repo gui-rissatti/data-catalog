@@ -1,0 +1,34 @@
+[
+    {
+        "campaign_name": "Q4 Brand Awareness",
+        "platform": "LinkedIn",
+        "impressions": 50000,
+        "clicks": 1200,
+        "cost": 5000,
+        "ctr": 2.4
+    },
+    {
+        "campaign_name": "Holiday Promo",
+        "platform": "Google Ads",
+        "impressions": 120000,
+        "clicks": 4500,
+        "cost": 8000,
+        "ctr": 3.75
+    },
+    {
+        "campaign_name": "Retargeting Cart",
+        "platform": "Facebook",
+        "impressions": 30000,
+        "clicks": 800,
+        "cost": 1500,
+        "ctr": 2.66
+    },
+    {
+        "campaign_name": "Newsletter Signup",
+        "platform": "Instagram",
+        "impressions": 45000,
+        "clicks": 900,
+        "cost": 2000,
+        "ctr": 2.0
+    }
+]
